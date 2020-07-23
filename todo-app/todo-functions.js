@@ -50,6 +50,14 @@ function renderTodos(todos, filters) {
 }
 
 
+function updateCompleted(todoId, checked) {
+    todos.find(function (todo) {
+        return todo.id === todoId
+    }).completed = checked
+    saveTodos(todos)
+    renderTodos(todos, filters)
+}
+
 function generateTodoDom(todo) {
     const todoEle = document.createElement("div")
     todoEle.className = 'todo'
@@ -59,9 +67,13 @@ function generateTodoDom(todo) {
     const spanText = document.createElement("span")
 
     todoCheckbox.setAttribute('type', 'checkbox')
+    todoCheckbox.checked = todo.completed
     spanText.textContent = todo.text
     labelEle.appendChild(todoCheckbox)
     labelEle.appendChild(spanText)
+    todoCheckbox.addEventListener('change', function (e) {
+        updateCompleted(todo.id, e.target.checked)
+    })
     todoEle.appendChild(labelEle)
 
     const deleteButton = document.createElement("button")
