@@ -33,8 +33,8 @@ function getThingsTodo(todos) {
 
 function sortTodo(todos) {
     return todos.sort(function (todo1, todo2) {
-        if (todo1.completed & !todo2.completed) return 1
-        if (!todo1.completed & todo2.completed) {
+        if (todo1.completed && !todo2.completed) return 1
+        if (!todo1.completed && todo2.completed) {
             return -1
         } else return 0
     })
@@ -43,15 +43,11 @@ function sortTodo(todos) {
 function renderTodos(todos, filters) {
 
     let filterd = todos.filter(function (todo) {
-        return todo.text.toLowerCase().includes(filters.filterText.toLowerCase())
+        const textMatcher = todo.text.toLowerCase().includes(filters.filterText.toLowerCase())
+        const completedMatcher = !filters.hideCompleted || !todo.completed
+        return textMatcher && completedMatcher
     })
 
-    if (filters.hideCompleted) {
-        filterd = filterd.filter(function (todo) {
-            return !todo.completed
-        })
-        console.log(filterd)
-    }
     console.log(filterd)
 
     const todoLeft = filterd.filter(function (todo) {
