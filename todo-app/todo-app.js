@@ -12,6 +12,11 @@ const todos = [{
     completed: false
 }]
 
+filters = {
+    filterText: '',
+    hideCompleted: false
+}
+
 
 function removeTodo(todos, text) {
     let index = todos.findIndex(function (task) {
@@ -36,9 +41,18 @@ function sortTodo(todos) {
 }
 
 function renderTodos(todos, filters) {
-    const filterd = todos.filter(function (todo) {
-        return todo.text.toLowerCase().includes(filters.searchText.toLowerCase())
+
+    let filterd = todos.filter(function (todo) {
+        return todo.text.toLowerCase().includes(filters.filterText.toLowerCase())
     })
+
+    if (filters.hideCompleted) {
+        filterd = filterd.filter(function (todo) {
+            return !todo.completed
+        })
+        console.log(filterd)
+    }
+    console.log(filterd)
 
     const todoLeft = filterd.filter(function (todo) {
         return !todo.completed
@@ -59,18 +73,12 @@ function renderTodos(todos, filters) {
     })
 }
 
-renderTodos(todos, {searchText: ''} )
+renderTodos(todos, filters)
 
-
-document.querySelector("#remove-all").addEventListener("click", function (e) {
-    document.querySelectorAll(".todo").forEach(function (todo) {
-        document.querySelector("#notes").innerHTML = ''
-    })
-    console.log('Removed all')
-})
 
 document.querySelector("#search-text").addEventListener('input', function (e) {
-    renderTodos(todos, {searchText: e.target.value})
+    filters.filterText = e.target.value
+    renderTodos(todos, filters)
 })
 
 document.querySelector("#todo-form").addEventListener('submit', function (e) {
@@ -79,6 +87,11 @@ document.querySelector("#todo-form").addEventListener('submit', function (e) {
         text: e.target.elements.taskText.value,
         completed: false
     })
-    renderTodos(todos, {searchText: ''})
+    renderTodos(todos, filters)
     e.target.elements.taskText.value = ''
+})
+
+document.querySelector("#hide-complete").addEventListener('change', function (e) {
+    filters.hideCompleted = e.target.checked
+    renderTodos(todos, filters)
 })
