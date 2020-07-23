@@ -1,22 +1,17 @@
-const todos = [{
-    text: 'Clean',
-    completed: false
-}, {
-    text: 'Cook',
-    completed: true
-}, {
-    text: 'Bake',
-    completed: true
-}, {
-    text: 'Sleep',
-    completed: false
-}]
+let todos = []
 
-filters = {
+let filters = {
     filterText: '',
     hideCompleted: false
 }
 
+
+const todosJSON = localStorage.getItem('todos')
+if (todosJSON !== null){
+    todos = JSON.parse(todosJSON)
+}
+
+// localStorage.setItem('test', 'hhh')
 
 function removeTodo(todos, text) {
     let index = todos.findIndex(function (task) {
@@ -83,6 +78,7 @@ document.querySelector("#todo-form").addEventListener('submit', function (e) {
         text: e.target.elements.taskText.value,
         completed: false
     })
+    localStorage.setItem('todos', JSON.stringify(todos))
     renderTodos(todos, filters)
     e.target.elements.taskText.value = ''
 })
