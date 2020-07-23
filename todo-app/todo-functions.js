@@ -4,7 +4,6 @@ function loadTodosFromStorage() {
     if (todosJSON !== null) {
         return JSON.parse(todosJSON)
     } else return []
-
 }
 
 function saveTodos(todos) {
@@ -27,11 +26,13 @@ function sortTodo(todos) {
     })
 }
 
-function removeTodo(todos, text) {
+function removeTodo(todoId) {
     let index = todos.findIndex(function (task) {
-        return task.text === text
+        return task.id === todoId
     })
-    if (index > -1) todo.splice(index, 1)
+    if (index > -1) todos.splice(index, 1)
+    saveTodos(todos)
+    renderTodos(todos, filters)
 }
 
 
@@ -48,10 +49,28 @@ function renderTodos(todos, filters) {
     })
 }
 
+
 function generateTodoDom(todo) {
-    const todoEle = document.createElement("p")
+    const todoEle = document.createElement("div")
     todoEle.className = 'todo'
-    todoEle.textContent = todo.text
+
+    const labelEle = document.createElement("label")
+    const todoCheckbox = document.createElement("input")
+    const spanText = document.createElement("span")
+
+    todoCheckbox.setAttribute('type', 'checkbox')
+    spanText.textContent = todo.text
+    labelEle.appendChild(todoCheckbox)
+    labelEle.appendChild(spanText)
+    todoEle.appendChild(labelEle)
+
+    const deleteButton = document.createElement("button")
+    deleteButton.textContent = 'x'
+    deleteButton.addEventListener('click', function (e) {
+        removeTodo(todo.id)
+    })
+    todoEle.appendChild(deleteButton)
+
     return todoEle
 }
 
