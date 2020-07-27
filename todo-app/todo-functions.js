@@ -51,9 +51,11 @@ function renderTodos(todos, filters) {
 
 
 function updateCompleted(todoId, checked) {
-    todos.find(function (todo) {
+    const todo = todos.find(function (todo) {
         return todo.id === todoId
-    }).completed = checked
+    })
+    todo.completed = checked
+    todo.updated = new moment().valueOf()
     saveTodos(todos)
     renderTodos(todos, filters)
 }
@@ -64,11 +66,12 @@ function generateTodoDom(todo) {
 
     const labelEle = document.createElement("label")
     const todoCheckbox = document.createElement("input")
-    const spanText = document.createElement("span")
+    const spanText = document.createElement("a")
 
     todoCheckbox.setAttribute('type', 'checkbox')
     todoCheckbox.checked = todo.completed
     spanText.textContent = todo.text
+    spanText.setAttribute('href', `/edit.html#${todo.id}`)
     labelEle.appendChild(todoCheckbox)
     labelEle.appendChild(spanText)
     todoCheckbox.addEventListener('change', function (e) {
